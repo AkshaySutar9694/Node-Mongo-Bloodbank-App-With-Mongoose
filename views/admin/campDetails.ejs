@@ -1,0 +1,230 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/home.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<meta name="csrf-token" content="<%= csrfToken %>">
+</head>
+
+<body>
+     <div class="home-page-main-wrapper">
+        <div class="home-page-main-container shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+            <%- include('./admin-includes/admin-navigation.ejs') %>
+            <div class="home-page-right-panel-wrapper border-t flex flex-col justify-center items-center border-slate-100">
+                <div class="home-page-main-content-header w-full p-8 h-full flex flex-row justify-between"> 
+                    <div class="flex flex-col justify-start items-start gap-2">
+                        <div class="text-slate-800 text-4xl font-medium">Hello Admin!</div>
+                        <div class="text-slate-500 text-2xl">Welcome to Tulajaram Blood Bank!</div>
+                    </div>
+                </div>
+                
+                <div class="home-page-main-content-body w-full h-full">
+                    <div class="flex flex-col justify-start items-start p-8 gap-8 text-xl">
+                        <% if (errorMessage !== "") { %>
+                            <p class="text-danger-accent-300"><%= errorMessage %></p>
+                        <% } %>
+                        <p id="error-messges-container" class="text-danger-accent-300 hidden"></p>
+                        <div class="text-slate-800 text-2xl w-full">Donation Camps Managemnt.</div>
+                        <div class="flex justify-center gap-4">
+                            <button onclick="toggleView('registerCamp')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
+                                Create New Camp
+                            </button>
+                            <button onclick="toggleView('viewCamps')" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none">
+                                View Existing Camps
+                            </button>
+                        </div>
+
+                        <!-- Create New Camp Form -->
+                        <% if (view === 'registerCamp') { %>
+                        <div class="bg-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] rounded-lg p-6 w-full">
+                            <h2 class="text-xl font-semibold text-gray-700 mb-4">Create New Donation Camp</h2>
+                            <form action="/admin/camps/registerCamp" method="POST" class="space-y-4">
+                            <div>
+                                <label for="campName" class="block text-gray-600 font-medium">Camp Name:</label>
+                                <input type="text" id="campName" name="campName" value="<%= oldInput.campName ? oldInput.campName : ''  %>" required 
+                                class="w-full px-4 py-2 border rounded-lg border-slate-500">
+                            </div>
+                            <div>
+                                <label for="location" class="block text-gray-600 font-medium">Location:</label>
+                                <input type="text" id="location" name="location"  value="<%= oldInput.location ? oldInput.location : '' %>" required 
+                                class="w-full px-4 py-2 border rounded-lg border-slate-500">
+                            </div>
+                            <div>
+                                <label for="date" class="block text-gray-600 font-medium">Date:</label>
+                                <input type="date" id="date" name="date" required value="<%= oldInput.date ? oldInput.date : '' %>"
+                                class="w-full px-4 py-2 border rounded-lg border-slate-500">
+                            </div>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="submit" 
+                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
+                                Create Camp
+                            </button>
+                            </form>
+                        </div>
+                        <% } %>
+
+                        <!-- View Existing Camps -->
+                        <% if (view === 'viewCamps') { %>
+                        <div class="bg-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] rounded-lg p-6 w-full h-full">
+                            <h2 class="text-xl font-semibold text-gray-700 mb-4">Existing Donation Camps</h2>
+                            <% if (camps.length > 0) { %>
+                            <table class="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-slate-500 text-white">
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Camp Name</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Location</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Date</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium hidden">Participants</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white">
+                                    <% camps.forEach((camp) => { 
+                                        const isToday = new Date(camp.date).toISOString().slice(0, 10) === new Date().toISOString().slice(0, 10);
+                                        const isPast = new Date() > new Date(camp.date);
+                                        %>
+                                    <tr class="hover:bg-gray-100" data-id="<%= camp._id %>">
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900">
+                                            <span class="display-mode"><%= camp.name %></span>
+                                            <input type="text" name="name" class="edit-mode hidden w-full px-4 py-2 border rounded-lg border-slate-500" value="<%= camp.name %>">
+                                        </td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900">
+                                            <span class="display-mode"><%= camp.location %></span>
+                                            <input type="text" name="location" class="edit-mode hidden w-full px-4 py-2 border rounded-lg border-slate-500" value="<%= camp.location %>">
+                                        </td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900">
+                                            <span class="display-mode"><%= camp.date %></span>
+                                            <input type="date" name="date" class="edit-mode hidden w-full px-4 py-2 border rounded-lg border-slate-500" value="<%= camp.date %>">
+                                        </td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900 hidden">
+                                            <span class="display-mode"><%= camp.participants %></span>
+                                            <input type="text" name="participants" class="edit-mode hidden w-full px-4 py-2 border rounded-lg border-slate-500" value="<%= camp.participants %>">
+                                        </td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900">
+                                            <div class="flex flex-row justify-start items-center w-full">
+                                                <button class="camp-edit-btn text-blue-500">Edit</button>
+                                                <button class="camp-save-btn hidden text-green-500">Save</button>
+                                                <button class="camp-cancel-btn hidden text-red-500 ml-6">Cancel</button>
+                                                <button class="camp-delete-btn text-red-500 ml-6">Delete</button>
+                                                <% if (isToday) { %>
+                                                    <a href="/admin/camps/<%= camp._id %>/donations" 
+                                                    class="camp-info-button text-green-500 ml-6">Add Donations</a>
+                                                    <% } else if (isPast) { %>
+                                                    <a href="/admin/camps/<%= camp._id %>/donors" 
+                                                    class="camp-info-button text-blue-500 ml-6">View Donations Recorded</a>
+                                                <% } else { %>
+                                                    <a href="/admin/camps/<%= camp._id %>/donors" 
+                                                    class="camp-info-button text-violet-800 ml-6">View Registered Donors</a>
+                                                <% } %>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                            <% } else { %>
+                            <p class="text-gray-600">No camps available. Please create a new camp.</p>
+                            <% } %>
+                        </div>
+                        <% } %>
+
+                        <!-- Add Donations Section -->
+                        <% if (view === 'addDonations') { %>
+                        <div class="bg-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] rounded-lg p-6 w-full">
+                            <% if (donors.length > 0) { %>
+                                <h2 class="text-xl font-semibold text-gray-700 mb-4">Add Donations for <%= camp.name %></h2>
+                                <table class="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg overflow-hidden">
+                                    <thead>
+                                        <tr class="bg-slate-500 text-white">
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Donation Id</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Name</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Blood Group</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Age</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Phone</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Blood Collected (ml)</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="donationTableBody" class="bg-white">
+                                        <% donors.forEach(donor => { %>
+                                        <tr id="row-<%= donor._id %>" class="hover:bg-gray-100">
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900"><%= donor.donationId %></td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900"><%= donor.name %></td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900"><%= donor.bloodGroup %></td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900"><%= donor.age %></td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900"><%= donor.mobileNo %></td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900">
+                                            <input 
+                                            type="number" 
+                                            id="bloodCollected-<%= donor._id %>" 
+                                            value="<%= donor.bloodCollected || 0 %>" 
+                                            class="w-full border border-gray-300 rounded px-2 py-1 focus:outline-none focus:border-blue-500" 
+                                            readonly>
+                                        </td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900">
+                                            <button onclick="editRow('<%= donor._id %>', '<%= donor.bloodGroup %>', '<%= donor.donationId %>')" id="editBtn-<%= donor._id %>" 
+                                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
+                                                Edit
+                                            </button>
+                                            <button onclick="saveRow('<%= donor._id %>', '<%= donor.bloodGroup %>', '<%= donor.donationId %>')" id="saveBtn-<%= donor._id %>" 
+                                                class="hidden bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none">
+                                                Save
+                                            </button>
+                                        </td>
+                                        </tr>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                            <% } else { %>
+                                <p class="text-gray-600">No donors registered for this camp yet.</p>
+                            <% } %>
+                        </div>
+                        <% } %>
+
+                        <!-- View Registered Donors for Specific Camp -->
+                        <% if (view === 'campDonors') { %>
+                            <div class="bg-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] rounded-lg p-6 w-full">
+                                <h2 class="text-xl font-semibold text-gray-700 mb-4">Registered Donors for <%= camp.name %></h2>
+                                <% if (donors.length > 0) { %>
+                                <table class="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-slate-500 text-white">
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Name</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Blood Group</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Age</th>
+                                        <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Mobile No.</th>
+                                        <% if(campExpired != null && campExpired === true) { %>
+                                            <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Blood Collected (ml)</th>  
+                                        <% } %>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white">
+                                    <% donors.forEach(donor => { %>
+                                    <tr class="hover:bg-gray-100">
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900"><%= donor.name %></td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900"><%= donor.bloodGroup %></td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900"><%= donor.age %></td>
+                                        <td class="px-6 py-4 border-b text-xl text-gray-900"><%= donor.mobileNo %></td>
+                                        <% if(campExpired != null && campExpired === true) { %>
+                                            <td class="px-6 py-4 border-b text-xl text-gray-900"><%= donor.bloodCollected || 0 %></td>
+                                        <% } %>
+                                    </tr>
+                                    <% }) %>
+                                </tbody>
+                                </table>
+                                <% } else { %>
+                                <p class="text-gray-600">No donors registered for this camp yet.</p>
+                                <% } %>
+                                <button 
+                                onclick="toggleView('viewCamps')" 
+                                class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
+                                Back to Camps
+                                </button>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+                <%- include('./admin-includes/admin-footer.ejs') %>
+            </div>     
+        <div>
+    </div>
+    <script src="/js/campManipulation.js"></script>
+<%- include('../includes/end.ejs') %>

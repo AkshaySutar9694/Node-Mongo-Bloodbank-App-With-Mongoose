@@ -1,0 +1,39 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body>
+    <div class="login-page-main-wrapper">
+        <div class="login-page-main-container shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+            <%- include('./authCommonActions.ejs') %>
+            <div class="right-panel-wrapper border-t flex flex-col justify-center items-center border-slate-100">                
+                <!-- Admin Forms - Starting from here -->
+                <div class="w-3/5 tcc-form-wrapper flex flex-col gap-8" id="adminForms">
+                    <% if (errorMessage !== "") { %>
+                        <p class="text-danger-accent-300 text-center"><%= errorMessage %></p>
+                     <% } %>
+                    <div class="text-center text-4xl font-normal">Login as an Admin</div>
+                    <div>
+                        <form id="adminSigninForm" action="/admin/signin" method="POST" class="flex flex-col gap-4 items-center">
+                            <div class="w-full">
+                                <label for="admin-signin-username">Username:</label>
+                                <input type="text" id="admin-signin-username" name="admin-signin-username" value="<%= oldInput.username %>" class="w-full px-4 py-2 border rounded-lg h-[38px] border-slate-500" />
+                                <span id="admin-signin-usernameError" class="error"></span><br>
+                            </div>
+
+                            <div class="w-full">
+                                <label for="admin-signin-password">Password:</label>
+                                <input type="password" id="admin-signin-password" name="admin-signin-password" value="<%= oldInput.password %>" class="w-full px-4 py-2 border rounded-lg h-[38px] border-slate-500" />
+                                <span id="admin-signin-passwordError" class="error"></span><br>
+                            </div>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button class="bg-slate-700 text-white px-4 py-2 rounded hover:bg-slate-500 text-base w-1/2" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- Admin Forms - Ending here -->
+            </div>     
+        <div>
+    </div>
+    <script src="/js/adminAuthScript.js"></script>
+<%- include('../includes/end.ejs') %>

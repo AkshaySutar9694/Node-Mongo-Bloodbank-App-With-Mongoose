@@ -1,0 +1,197 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/home.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+     <div class="home-page-main-wrapper">
+        <div class="home-page-main-container shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+            <%- include('./admin-includes/admin-navigation.ejs') %>
+            <div class="home-page-right-panel-wrapper border-t flex flex-col justify-center items-center border-slate-100">
+                <div class="home-page-main-content-header w-full p-8 h-full flex flex-row justify-between"> 
+                    <div class="flex flex-col justify-start items-start gap-2">
+                        <div class="text-slate-800 text-4xl font-medium">Hello Admin! Check Donors Details Here.</div>
+                        <div class="text-slate-500 text-2xl">Welcome to Tulajaram Blood Bank!</div>
+                    </div>
+                </div>
+                <div class="home-page-main-content-body w-full h-full">
+                    <% if(view === "donorList") { %>
+                        <div id="donor-list" class="flex flex-col justify-start items-start p-8 gap-8 text-xl">
+                            <div class="text-slate-800 text-2xl w-full">Donors Registered Details.</div>
+                            <% if(donorDetails.length > 0) { %>
+                                <div class="bg-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] rounded-lg p-6 w-full h-full">
+                                    <h2 class="text-xl font-semibold text-gray-700 mb-4">Donors Data</h2>
+                                    <div class="overflow-x-auto p-2">
+                                        <table class="w-[max-content] border-collapse border border-gray-200 shadow-md rounded-lg overflow-hidden">
+                                            <thead>
+                                                <tr class="bg-slate-500 text-white">
+                                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Name</th>
+                                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Age</th>
+                                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Blood Group</th>
+                                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Mobile Number</th>
+                                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Address</th>
+                                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Donation Counts</th>
+                                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Reward Points</th>
+                                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Last Donation Done On</th>
+                                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white">
+                                                <% donorDetails.forEach((item) => { %>
+                                                <tr class="hover:bg-gray-100">
+                                                    <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900"><%= item.name %></td>
+                                                    <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900"><%= item.age %></td>
+                                                    <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900"><%= item.bloodGroup %></td>
+                                                    <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900"><%= item.mobileNo %></td>
+                                                    <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900"><%= item.address %></td>
+                                                    <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900"><%= item.donationCount %></td>
+                                                    <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900"><%= item.points %></td>
+                                                    <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900"><%= item.lastDonationDone %></td>
+                                                    <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900">
+                                                        <div class="flex flex-row gap-4">
+                                                        <form action="/admin/donorDetails/getDonationDetails" method="POST">
+                                                            <input type="hidden" name="data-donor-id" value="<%= item._id %>" />
+                                                            <input type="hidden" name="data-donor-name" value="<%= item.name %>" />
+                                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                            <button class="donor-donation-info-button text-green-500 cursor-pointer" data-donor-id="<%= item._id %>">
+                                                                View Donation Details
+                                                            </button>
+                                                        </form>
+                                                        <form action="/admin/donorDetails/getRequestDetails" method="POST">
+                                                            <input type="hidden" name="data-donor-id" value="<%= item._id %>" />
+                                                            <input type="hidden" name="data-donor-name" value="<%= item.name %>" />
+                                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                            <button class="donor-request-info-button text-blue-500 cursor-pointer" data-donor-id="<%= item._id %>">
+                                                                View Request Details
+                                                            </button>
+                                                        </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            <% } else { %>
+                                <div class="w-full bg-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] rounded-lg p-6">
+                                    <div class="text-gray-500 text-left text-xl mt-4">
+                                        <h2 class="text-xl font-semibold text-gray-700 mb-4">No Donors found!</h2>
+                                    </div>
+                                </div>
+                            <% }%>
+                        </div>
+                    <% } %>
+                    
+                    <!-- Donation details of a donor  -->
+                    <% if(view === "donationList" && donorName != null) { %>
+                        <div id="donor-donation-details" class="flex flex-col justify-start items-start p-8 gap-8 text-xl">
+                            <div class="text-slate-800 text-2xl w-full">Donation Details of <span class="text-2xl font-semibold text-gray-700">"<%= donorName %>"<span></div>
+                            <div class="bg-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] rounded-lg p-8 text-lg w-full h-full overflow-auto">
+                                <% if(historyDetails != null && Array.isArray(historyDetails) && historyDetails.length > 0) { %>
+                                   <div class="flex flex-row justify-between items-center">
+                                        <h2 class="text-xl font-semibold text-gray-700">Past donation details</h2>
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
+                                            <a href="/admin/donorDetails">Go Back</a>
+                                        </button>
+                                    </div>
+                                    <!-- Table for Camp Details -->
+                                    <table class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
+                                        <thead>
+                                            <tr class="bg-slate-500 text-white">
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Camp Name</th>
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Location</th>
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Date</th>
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Blood donated (ml)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            <% historyDetails.forEach(camp => { %>
+                                                <tr>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-xl"><%= camp.name %></td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-xl"><%= camp.location %></td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-xl"><%= camp.date %></td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-center text-gray-700 text-xl"><%= camp.bloodAmount%></td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                <% } %>
+                                <!-- No Donation Message -->
+                                <% if (historyDetails != null && Array.isArray(historyDetails) && historyDetails.length === 0) { %>
+                                    <div class="flex flex-row justify-between items-center">
+                                        <h2 class="text-xl font-semibold text-gray-700">There is no donation history.</h2>
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
+                                            <a href="/admin/donorDetails">Go Back</a>
+                                        </button>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% } %>    
+
+                    <!-- Request details of a donor  -->
+                    <% if(view === "requestList" && donorName != null) { %>
+                        <div id="donor-request-details" class="flex flex-col justify-start items-start p-8 gap-8 text-xl">
+                            <div class="text-slate-800 text-2xl w-full">Request Details of <span class="text-2xl font-semibold text-gray-700">"<%= donorName %>"<span></div>
+                            <div class="bg-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] rounded-lg p-8 text-lg w-full h-full overflow-auto">
+                                <% if(requestDetails != null && Array.isArray(requestDetails) && requestDetails.length > 0) { %>
+                                    <div class="flex flex-row justify-between items-center">
+                                        <h2 class="text-xl font-semibold text-gray-700">All requests raised</h2>
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
+                                            <a href="/admin/donorDetails">Go Back</a>
+                                        </button>
+                                    </div>
+                                    <table class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
+                                        <thead>
+                                            <tr class="bg-slate-500 text-white">
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Request ID</th>
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Blood Group</th>
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Units Needed</th>
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Date</th>
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            <% requestDetails.forEach(request => { %>
+                                                <tr>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-xl"><%= request._id %></td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-xl"><%= request.bloodGroup %></td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-center text-gray-700 text-xl"><%= request.units %></td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-xl"><%= request.date %></td>
+                                                    <!-- Status Column -->
+                                                    <td class="px-6 py-4 whitespace-nowrap text-xl">
+                                                        <% if (request.status === 'pending') { %>
+                                                            <span class="text-blue-600 font-semibold">Pending</span>
+                                                        <% } else if (request.status === 'approved') { %>
+                                                            <span class="text-green-600 font-semibold">Approved</span>
+                                                        <% } else if (request.status === 'rejected') { %>
+                                                            <span class="text-red-600 font-semibold">Rejected</span>
+                                                        <% } %>
+                                                    </td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                <% } %>
+
+                                <% if(requestDetails != null && (Array.isArray(requestDetails) && requestDetails.length === 0) || requestDetails === 0) { %>
+                                    <div class="flex flex-row justify-between items-center">
+                                        <h2 class="text-xl font-semibold text-gray-700">No requests raised yet!</h2>
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
+                                            <a href="/admin/donorDetails">Go Back</a>
+                                        </button>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% } %> 
+                </div>
+                <%- include('./admin-includes/admin-footer.ejs') %>
+            </div>
+       
+<%- include('../includes/end.ejs') %>

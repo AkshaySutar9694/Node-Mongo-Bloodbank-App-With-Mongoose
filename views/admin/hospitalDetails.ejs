@@ -1,0 +1,130 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/home.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+     <div class="home-page-main-wrapper">
+        <div class="home-page-main-container shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+            <%- include('./admin-includes/admin-navigation.ejs') %>
+            <div class="home-page-right-panel-wrapper border-t flex flex-col justify-center items-center border-slate-100">
+                <div class="home-page-main-content-header w-full p-8 h-full flex flex-row justify-between"> 
+                    <div class="flex flex-col justify-start items-start gap-2">
+                        <div class="text-slate-800 text-4xl font-medium">Hello Admin! Check Hospital Details Here.</div>
+                        <div class="text-slate-500 text-2xl">Welcome to Tulajaram Blood Bank!</div>
+                    </div>
+                </div>
+                <div class="home-page-main-content-body w-full h-full">
+                    <% if(view === "hospitalList") { %>
+                        <div class="flex flex-col justify-start items-start p-8 gap-8 text-xl">
+                            <div class="text-slate-800 text-2xl w-full">Linked Hospital Details</div>
+                            <% if(hospitalDetails != null && Array.isArray(hospitalDetails) && hospitalDetails.length > 0) { %>
+                                <div class="bg-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] rounded-lg p-6 w-full h-full">
+                                    <h2 class="text-xl font-semibold text-gray-700 mb-4">Hospital Data</h2>
+                                    <table class="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg overflow-hidden">
+                                        <thead>
+                                            <tr class="bg-slate-500 text-white">
+                                                <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Name</th>
+                                                <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Email</th>
+                                                <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Mobile Number</th>
+                                                <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Address</th>
+                                                <th class="px-6 py-3 border-b border-gray-200 text-left text-xl uppercase font-medium">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white">
+                                            <% hospitalDetails.forEach((item) => { %>
+                                            <tr class="hover:bg-gray-100">
+                                                <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900"><%= item.name %></td>
+                                                <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900"><%= item.email %></td>
+                                                <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900"><%= item.mobileNo %></td>
+                                                <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900"><%= item.address %></td>
+                                                <td class="px-6 py-4 border-b border-gray-200 text-xl text-gray-900">
+                                                    <div class="flex flex-row gap-4">
+                                                    <form action="/admin/hospitalDetails/getRequestDetails" method="POST">
+                                                        <input type="hidden" name="data-hospital-id" value="<%= item._id %>" />
+                                                        <input type="hidden" name="data-hospital-name" value="<%= item.name %>" />
+                                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                        <button class="text-blue-500 cursor-pointer" data-hospital-id="<%= item._id %>">
+                                                            View Request Details
+                                                        </button>
+                                                    </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <% } else { %>
+                                <div class="w-full bg-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] rounded-lg p-6">
+                                    <div class="text-gray-500 text-left text-xl mt-4">
+                                        <h2 class="text-xl font-semibold text-gray-700 mb-4">No hospital details found!</h2>
+                                    </div>
+                                </div>
+                            <% }%>
+                        </div>
+                    <% } %>
+                    
+                    <!-- Request details of a hospitals  -->
+                    <% if(view === "requestList" && hospitalName != null) { %>
+                        <div class="flex flex-col justify-start items-start p-8 gap-8 text-xl">
+                            <div class="text-slate-800 text-2xl w-full">Request Details of <span class="text-2xl font-semibold text-gray-700">"<%= hospitalName %>"<span></div>
+                            <div class="bg-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] rounded-lg p-8 text-lg w-full h-full overflow-auto">
+                                <% if(requestDetails != null && Array.isArray(requestDetails) && requestDetails.length > 0) { %>
+                                    <div class="flex flex-row justify-between items-center">
+                                        <h2 class="text-xl font-semibold text-gray-700">All requests raised</h2>
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
+                                            <a href="/admin/hospitals">Go Back</a>
+                                        </button>
+                                    </div>
+                                    <table class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
+                                        <thead>
+                                            <tr class="bg-slate-500 text-white">
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Request ID</th>
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Blood Group</th>
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Units Needed</th>
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Date</th>
+                                                <th class="px-6 py-3 border-b text-left text-xl uppercase font-medium">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            <% requestDetails.forEach(request => { %>
+                                                <tr>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-xl"><%= request._id %></td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-xl"><%= request.bloodGroup %></td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-center text-gray-700 text-xl"><%= request.units %></td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-xl"><%= request.date %></td>
+                                                    <!-- Status Column -->
+                                                    <td class="px-6 py-4 whitespace-nowrap text-xl">
+                                                        <% if (request.status === 'pending') { %>
+                                                            <span class="text-blue-600 font-semibold">Pending</span>
+                                                        <% } else if (request.status === 'approved') { %>
+                                                            <span class="text-green-600 font-semibold">Approved</span>
+                                                        <% } else if (request.status === 'rejected') { %>
+                                                            <span class="text-red-600 font-semibold">Rejected</span>
+                                                        <% } %>
+                                                    </td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                <% } %>
+
+                                <% if(requestDetails != null && (Array.isArray(requestDetails) && requestDetails.length === 0) || requestDetails === 0) { %>
+                                    <div class="flex flex-row justify-between items-center">
+                                        <h2 class="text-xl font-semibold text-gray-700">No requests raised yet!</h2>
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
+                                            <a href="/admin/hospitalDetails">Go Back</a>
+                                        </button>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% } %> 
+                </div>
+                <%- include('./admin-includes/admin-footer.ejs') %>
+            </div>
+       
+<%- include('../includes/end.ejs') %>

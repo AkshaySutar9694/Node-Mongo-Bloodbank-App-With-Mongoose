@@ -1,0 +1,118 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body>
+    <div class="login-page-main-wrapper">
+        <div class="login-page-main-container shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+             <%- include('./authCommonActions.ejs') %>
+            <div class="right-panel-wrapper border-t flex flex-col justify-center items-center border-slate-100">
+                <!-- Donor Forms - Starting from here -->
+                <div class="w-3/5 tcc-form-wrapper flex flex-col gap-8" id="donorForms">
+                     <% if (errorMessage !== "") { %>
+                        <p class="text-danger-accent-300 text-center"><%= errorMessage %></p>
+                     <% } %>
+                    <div class="text-center text-4xl font-normal">Login or signup as a Donor</div>
+                    <div class="flex flex-row justify-center items-center gap-2">
+                        <% if (view === "signin") { %>
+                            <button id="donorLoginButton" class="bg-[rgb(36_157_251)] w-3/4 text-white rounded focus:outline-none">
+                                <a href="/auth/donor/signin" class="inline-block w-full h-full px-4 py-2">Login</a>
+                            </button>
+                            <button class="bg-slate-700 w-3/4 text-white rounded hover:bg-slate-500  focus:outline-none" id="donorSignupButton">
+                                <a href="/auth/donor/signup" class="inline-block w-full h-full px-4 py-2">Signup</a>
+                            </button>
+                        <% } %> 
+                        <% if (view === "signup") { %>
+                            <button id="donorLoginButton" class="bg-slate-700 w-3/4 text-white rounded hover:bg-slate-500 focus:outline-none">
+                                 <a href="/auth/donor/signin" class="inline-block w-full h-full px-4 py-2">Login</a>
+                            </button>
+                            <button class="bg-[rgb(36_157_251)] w-3/4 text-white rounded focus:outline-none" id="donorSignupButton">
+                               <a href="/auth/donor/signup" class="inline-block w-full h-full px-4 py-2">Signup</a>
+                            </button>
+                        <% } %>  
+                    </div>
+                    <div>
+                     <% if (view === "signup") { %>
+                        <form id="donorSignupForm" action="/donor/signup" method="POST" class="flex flex-col gap-4 items-center">
+                            <div class="w-full">
+                                <label for="donor-signup-name">Name:</label>
+                                <input type="text" id="donor-signup-name" name="donor-signup-name" value="<%= oldInput.name %>" class="w-full px-4 py-2 border rounded-lg h-[38px] border-slate-500" />
+                                <span id="donor-signup-nameError" class="error"></span><br>
+                            </div>
+                            
+                            <div class="w-full">
+                                <label for="donor-signup-age">Age:</label>
+                                <input type="number" id="donor-signup-age" name="donor-signup-age" min="18" max="65" value="<%= oldInput.age %>" class="w-full px-4 py-2 border rounded-lg h-[38px] border-slate-500" />
+                                <span id="donor-signup-ageError" class="error"></span><br>
+                            </div>
+                            
+                            <div class="w-full">
+                                <label for="donor-signup-bloodGroup">Blood Type:</label>
+                                <select id="donor-signup-bloodGroup" name="donor-signup-bloodGroup" value="<%= oldInput.bloodGroup %>" class="w-full px-4 py-2 border rounded-lg h-[38px] border-slate-500" style="appearance: none;">
+                                    <option value="">Select Blood Type</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </select>
+                                <span id="donor-signup-bloodTypeError" class="error"></span><br>
+                            </div>
+
+                            <div class="w-full">
+                                <label for="donor-signup-email">Email:</label>
+                                <input type="email" id="donor-signup-email" name="donor-signup-email" value="<%= oldInput.email %>" class="w-full px-4 py-2 border rounded-lg h-[38px] border-slate-500" />
+                                <span id="donor-signup-emailError" class="error"></span><br>
+                            </div>
+
+                            <div class="w-full">
+                                <label for="donor-signup-mobileNo">Mobile No:</label>
+                                <input type="text" id="donor-signup-mobileNo" name="donor-signup-mobileNo" value="<%= oldInput.mobileNo %>" class="w-full px-4 py-2 border rounded-lg h-[38px] border-slate-500" />
+                                <span id="donor-signup-mobilenoError" class="error"></span><br>
+                            </div>
+
+                            <div class="w-full">
+                                <label for="donor-signup-address">Address:</label>
+                                <textarea rows="5" id="donor-signup-address" name="donor-signup-address" min="18" max="65" class="w-full px-4 py-2 border rounded-lg border-slate-500"><%= oldInput.address %></textarea>
+                                <span id="donor-signup-addressError" class="error"></span><br>
+                            </div>
+
+                            <div class="w-full">
+                                <label for="donor-signup-password">Password:</label>
+                                <input type="password" id="donor-signup-password" name="donor-signup-password" value="<%= oldInput.password %>" class="w-full px-4 py-2 border rounded-lg h-[38px] border-slate-500" />
+                                <span id="donor-signup-passwordError" class="error"></span><br>
+                            </div>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button class="bg-slate-700 text-white px-4 py-2 rounded hover:bg-slate-500 text-base w-1/2" type="submit">Submit</button>
+                        </form>
+                     <% } %>
+                        
+                    <% if (view === "signin") { %>
+                        <form id="donorSigninForm" action="/donor/signin" method="POST" class="flex flex-col gap-4 items-center">
+                            <div class="w-full">
+                                <label for="donor-signin-email">Email:</label>
+                                <input type="email" id="donor-signin-email" name="donor-signin-email" value="<%= oldInput.email %>" class="w-full px-4 py-2 border rounded-lg h-[38px] border-slate-500" />
+                                <span id="donor-signin-emailError" class="error"></span><br>
+                            </div>
+
+                            <div class="w-full">
+                                <label for="donor-signin-password">Password:</label>
+                                <input type="password" id="donor-signin-password" name="donor-signin-password" value="<%= oldInput.password %>" class="w-full px-4 py-2 border rounded-lg h-[38px] border-slate-500" />
+                                <span id="donor-signin-passwordError" class="error"></span><br>
+                            </div>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button class="bg-slate-700 text-white px-4 py-2 rounded hover:bg-slate-500 text-base w-1/2" type="submit">Submit</button>
+                            
+                        </form>
+                     <% } %>
+                    </div>
+                </div>
+                <!-- Donor Forms - Ending here -->
+            </div>     
+        <div>
+    </div>
+    <script src="/js/donorAuthScript.js"></script>
+<%- include('../includes/end.ejs') %>

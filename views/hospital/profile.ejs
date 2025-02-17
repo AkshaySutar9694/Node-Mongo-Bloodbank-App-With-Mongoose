@@ -1,0 +1,96 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/home.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+     <div class="home-page-main-wrapper">
+        <div class="home-page-main-container shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+            <%- include('./hospital-includes/hospital-navigation.ejs') %>
+            <div class="home-page-right-panel-wrapper border-t flex flex-col justify-center items-center border-slate-100">
+                <div class="home-page-main-content-header w-full p-8 h-full flex flex-row justify-between"> 
+                    <div class="flex flex-col justify-start items-start gap-2">
+                        <div class="text-slate-800 text-4xl font-medium">Hello <%=hospitalDetails.name%> Management Team! Here is your profile details</div>
+                        <div class="text-slate-500 text-2xl">Keep your information up-to-date and stay ready to save lives!</div>
+                    </div>
+                </div>
+                <div class="home-page-main-content-body w-full h-full p-8">
+                    <!-- Hospital Details View -->
+                    <div id="hospitalDetailsContainer" class="bg-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] rounded-lg p-8 text-lg w-full h-full overflow-auto">
+                        <!-- Read Mode -->
+                        <div id="hospitalReadMode" class="flex flex-col gap-5" style="display: flex">
+                            <h2 class="text-2xl font-semibold text-gray-700">Hospital Details</h2>
+                            <div class="text-gray-700 text-xl"><span class="font-medium">Name:</span> <%= hospitalDetails.name %></div>
+                            <div class="text-gray-700 text-xl"><span class="font-medium">Official Email ID:</span> <%= hospitalDetails.email %></div>
+                            <div class="text-gray-700 text-xl"><span class="font-medium">Mobile Number:</span> <%= hospitalDetails.mobileNo %></div>
+                            <div class="text-gray-700 text-xl"><span class="font-medium">Address:</span> <%= hospitalDetails.address %></div>
+                            <div class="flex gap-4">
+                                <button id="editButton" class="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition text-xl">Edit Details</button>
+                            </div>
+                        </div>
+
+                        <!-- Edit Mode -->
+                        <div id="hospitalEditMode" class="flex flex-col gap-2 w-full" style="display: none;">
+                            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Hospital Details</h2>
+                            <form id="hospitalDetailsUpdateForm" action="/hospital/update-profile" method="POST">
+                               <div class="flex flex-col gap-6 text-xl">
+                                    <!-- Hidden Hospital ID -->
+                                    <input type="hidden" id="hospital-id" name="hospital-id" value="<%= hospitalDetails._id %>" />
+
+                                    <!-- Editable Fields -->
+                                    <div>
+                                        <label for="hospital-updated-name" class="block font-medium text-gray-700">Name</label>
+                                        <input type="text" id="hospital-updated-name" name="hospital-updated-name" value="<%= hospitalDetails.name %>" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
+                                        <span id="hospital-updated-nameError" class="error"></span>
+                                    </div>
+                                    <div>
+                                        <label for="hospital-updated-email" class="block font-medium text-gray-700">Official Email ID</label>
+                                        <input type="email" id="hospital-updated-email" name="hospital-updated-email" value="<%= hospitalDetails.email %>" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
+                                        <span id="hospital-updated-emailError" class="error"></span>
+                                    </div>
+                                    <div>
+                                        <label for="hospital-updated-mobileNo" class="block font-medium text-gray-700">Mobile No.</label>
+                                        <input type="text" id="hospital-updated-mobileNo" name="hospital-updated-mobileNo" value="<%= hospitalDetails.mobileNo %>" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
+                                        <span id="hospital-updated-mobilenoError" class="error"></span>
+                                    </div>
+                                    <div>
+                                        <label for="hospital-updated-address" class="block font-medium text-gray-700">Address</label>
+                                        <textarea id="hospital-updated-address" name="hospital-updated-address" rows="4" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"><%= hospitalDetails.address %></textarea>
+                                        <span id="hospital-updated-addressError" class="error"></span>
+                                    </div>
+
+                                    <!-- Change Password Section -->
+                                    <div class="bg-gray-50 p-4 rounded-md shadow-inner">
+                                        <p class="text-gray-600 font-medium mb-2">Want to change your password?</p>
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label for="hospital-updated-new-password" class="block font-medium text-gray-700">New Password</label>
+                                                <input type="password" id="hospital-updated-new-password" name="hospital-updated-new-password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
+                                                <span id="hospital-updated-newPasswordError" class="error"></span>
+                                            </div>
+                                            <div>
+                                                <label for="hospital-updated-confirm-password" class="block font-medium text-gray-700">Confirm Password</label>
+                                                <input type="password" id="hospital-updated-confirm-password" name="hospital-updated-confirm-password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
+                                                
+                                                <span id="hospital-updated-confirmPasswordError" class="error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Form Buttons -->
+                                    <div class="flex gap-4">
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button type="submit" class="bg-green-600 text-white py-2 px-6 rounded-md shadow-md hover:bg-green-700 transition">Save</button>
+                                        <button type="button" id="cancelButton" class="bg-gray-600 text-white py-2 px-6 rounded-md shadow-md hover:bg-gray-700 transition" onclick="toggleEditMode()">Cancel</button>
+                                    </div>
+                               </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <%- include('./hospital-includes/hospital-footer.ejs') %>
+            </div>     
+        <div>
+    </div>
+    <script src="/js/hospitalProfilePageScript.js"></script>
+<%- include('../includes/end.ejs') %></div>

@@ -1,0 +1,19 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  font-size: 76%;
+}
+
+body {
+  font-family: "DM Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: 16px;
+  font-style: normal;
+}
+
+.error-text {
+  color: tomato;
+}
