@@ -1,6 +1,27 @@
-function toggleView(view) {
-  window.location.href = `/admin/camps?view=${view}`;
+const viewCampButton = document.querySelectorAll("#view-camps-button");
+const registerCampButton = document.getElementById("register-camp-button");
+
+if (viewCampButton) {
+  viewCampButton.forEach((item) => {
+    item.addEventListener("click", () => {
+      window.location.href = `/admin/camps?view=viewCamps`;
+    });
+  });
 }
+
+if (registerCampButton) {
+  registerCampButton.addEventListener("click", () => {
+    window.location.href = `/admin/camps?view=registerCamp`;
+  });
+}
+
+const campDetailsEditButtons = document.querySelectorAll(
+  "#camp-details-edit-button"
+);
+
+const campDetailsSaveButtons = document.querySelectorAll(
+  "#camp-details-save-button"
+);
 
 function editRow(donorId) {
   const input = document.getElementById(`bloodCollected-${donorId}`);
@@ -11,6 +32,17 @@ function editRow(donorId) {
   input.classList.add("border-blue-500");
   editBtn.classList.add("hidden");
   saveBtn.classList.remove("hidden");
+}
+
+if (campDetailsEditButtons) {
+  campDetailsEditButtons.forEach((ietm) => {
+    item.addEventListener("click", () => {
+      const donorId = this.getAttribute("data-id");
+      const bloodGroup = this.getAttribute("data-blood-group");
+      const donationId = this.getAttribute("data-donation-id");
+      editRow(donorId);
+    });
+  });
 }
 
 async function saveRow(donorId, bloodGroup, donationId = null) {
@@ -49,6 +81,17 @@ async function saveRow(donorId, bloodGroup, donationId = null) {
     editBtn.classList.remove("hidden");
     saveBtn.classList.add("hidden");
   }
+}
+
+if (campDetailsSaveButtons) {
+  campDetailsSaveButtons.forEach((ietm) => {
+    item.addEventListener("click", () => {
+      const donorId = this.getAttribute("data-id");
+      const bloodGroup = this.getAttribute("data-blood-group");
+      const donationId = this.getAttribute("data-donation-id");
+      saveRow(donorId, bloodGroup, donationId);
+    });
+  });
 }
 
 document.querySelectorAll(".camp-edit-btn").forEach((editBtn) => {

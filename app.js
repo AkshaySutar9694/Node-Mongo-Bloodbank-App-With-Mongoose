@@ -7,12 +7,9 @@ const csrf = require("csurf");
 const helmet = require("helmet");
 const morgan = require("morgan");
 
-//const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.00y0i.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority&appName=Cluster0`;
+const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.00y0i.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority&appName=Cluster0`;
 
-const MONGODB_URI =
-  "mongodb+srv://super-user-01:Zz94nz0cxNOmGDDc@cluster0.00y0i.mongodb.net/bloodbank?retryWrites=true&w=majority&appName=Cluster0";
-
-//const MONGODB_URI = "mongodb://localhost:27017/bloodbank_mongoose";
+// const MONGODB_URI = "mongodb://localhost:27017/bloodbank_mongoose";
 
 const app = express();
 const session = require("express-session");
@@ -32,9 +29,9 @@ const donorRoutes = require("./routes/donor");
 const hospitalRoutes = require("./routes/hospital");
 const adminRoutes = require("./routes/admin");
 
-const accessLogs = fs.createWriteStream(path.join(__dirname, "access.log"), {
-  flags: "a",
-});
+// const accessLogs = fs.createWriteStream(path.join(__dirname, "access.log"), {
+//   flags: "a",
+// });
 
 app.use(helmet());
 //app.use(morgan("combined", { stream: accessLogs }));

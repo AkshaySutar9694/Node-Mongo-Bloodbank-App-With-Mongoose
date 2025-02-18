@@ -21,10 +21,10 @@
                     <div class="flex flex-col justify-start items-start gap-8 text-xl">
                         <div class="text-slate-800 text-2xl w-full">My Blood Requests Managemnt.</div>
                         <div class="flex justify-center gap-4">
-                            <button onclick="toggleView('createRequest')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
+                            <button id="create-request-button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
                                 Create A New Request
                             </button>
-                            <button onclick="toggleView('viewRequests')" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none">
+                            <button id="view-requests-button" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none">
                                 View Existing Requests
                             </button>
                         </div>
@@ -147,9 +147,5 @@
             </div>
         </div>
     </div>
-    <script>
-        function toggleView(view) {
-            window.location.href = `/donor/my-requests?view=${view}`;
-        }
-    </script>
+    <script src="/js/donorRequestPageScript.js"></script>
 <%- include('../includes/end.ejs') %>

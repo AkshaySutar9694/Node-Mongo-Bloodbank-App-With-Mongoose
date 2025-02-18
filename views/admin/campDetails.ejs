@@ -24,10 +24,10 @@
                         <p id="error-messges-container" class="text-danger-accent-300 hidden"></p>
                         <div class="text-slate-800 text-2xl w-full">Donation Camps Managemnt.</div>
                         <div class="flex justify-center gap-4">
-                            <button onclick="toggleView('registerCamp')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
+                            <button id="register-camp-button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
                                 Create New Camp
                             </button>
-                            <button onclick="toggleView('viewCamps')" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none">
+                            <button id="view-camps-button" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none">
                                 View Existing Camps
                             </button>
                         </div>
@@ -160,11 +160,11 @@
                                             readonly>
                                         </td>
                                         <td class="px-6 py-4 border-b text-xl text-gray-900">
-                                            <button onclick="editRow('<%= donor._id %>', '<%= donor.bloodGroup %>', '<%= donor.donationId %>')" id="editBtn-<%= donor._id %>" 
+                                            <button  data-id="<%= donor._id %>" data-blood-group="<%= donor.bloodGroup %>" data-donation-id="<%= donor.donationId %>" id="camp-details-edit-button" 
                                                 class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
                                                 Edit
                                             </button>
-                                            <button onclick="saveRow('<%= donor._id %>', '<%= donor.bloodGroup %>', '<%= donor.donationId %>')" id="saveBtn-<%= donor._id %>" 
+                                            <button data-id="<%= donor._id %>" data-blood-group="<%= donor.bloodGroup %>" data-donation-id="<%= donor.donationId %>"  id="camp-details-save-button" 
                                                 class="hidden bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none">
                                                 Save
                                             </button>
@@ -214,7 +214,7 @@
                                 <p class="text-gray-600">No donors registered for this camp yet.</p>
                                 <% } %>
                                 <button 
-                                onclick="toggleView('viewCamps')" 
+                                id="view-camps-button"
                                 class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none">
                                 Back to Camps
                                 </button>

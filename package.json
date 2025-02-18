@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "npm test",
-    "start": "NODE_ENV=production MONGO_USER=super-user-01 MONGO_PASSWORD=Zz94nz0cxNOmGDDc MONGO_DB=bloodbank PORT=3002 node app.js",
+    "start": "node app.js",
     "start-server": "node app.js",
     "start:dev": "nodemon app.js"
   },
